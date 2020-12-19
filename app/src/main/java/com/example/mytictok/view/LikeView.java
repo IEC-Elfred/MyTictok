@@ -115,7 +115,7 @@ public class LikeView extends RelativeLayout {
 
 
     //设置单击暂停
-    public void OnPlayPauseListener(OnPlayPauseListener onPlayPauseListener) {
+    public void setOnPlayPauseListener(OnPlayPauseListener onPlayPauseListener) {
         this.onPlayPauseListener = onPlayPauseListener;
     }
 

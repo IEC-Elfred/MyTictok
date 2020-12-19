@@ -1,6 +1,7 @@
 package com.example.mytictok.adapter;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -11,6 +12,7 @@ import com.example.mytictok.R;
 import com.example.mytictok.base.BaseRvAdapter;
 import com.example.mytictok.base.BaseRvViewHolder;
 import com.example.mytictok.bean.VideoBean;
+import com.example.mytictok.view.ControllerView;
 import com.example.mytictok.view.LikeView;
 
 import java.util.List;
@@ -26,13 +28,20 @@ public class VideoAdapter extends BaseRvAdapter<VideoBean,VideoAdapter.VideoView
 
     @Override
     protected void onBindData(VideoAdapter.VideoViewHolder holder, VideoBean data, int position) {
-
+        holder.controllerView.setVideoData(data);
+        holder.ivCover.setImageResource(data.getCoverRes());
+        holder.likeView.setOnLikeListener(()->{
+            if (!data.isLiked()){
+                holder.controllerView.like();
+            }
+        });
     }
 
     @NonNull
     @Override
     public VideoAdapter.VideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        View view = LayoutInflater.from(context).inflate(R.layout.item_video,parent,false);
+        return new VideoViewHolder(view);
     }
 
     public class VideoViewHolder extends BaseRvViewHolder {
