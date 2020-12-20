@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,18 +32,20 @@ import butterknife.BindView;
 import rx.functions.Action1;
 
 
-public class RecommendFragment extends BaseFragment{
+public class RecommendFragment extends BaseFragment {
     @BindView(R.id.recyclerview)
     RecyclerView recyclerView;
     @BindView(R.id.refreshlayout)
     SwipeRefreshLayout refreshLayout;
+
     private VideoAdapter adapter;
     private ViewPagerLayoutManager viewPagerLayoutManager;
     //当前播放位置
     private int curPlayPos = -1;
     private FullScreenVideoView videoView;
     private ImageView ivCurCover;
-    public static int initPos=0;
+    public static int initPos = 0;
+
 
     @Override
     protected int setLayoutId() {
@@ -56,14 +59,16 @@ public class RecommendFragment extends BaseFragment{
         videoView = new FullScreenVideoView(getContext());
         setViewPagerLayoutManager();
         setRefreshEvent();
-        ImageView ivPlay = rootView.findViewById(R.id.iv_play);
+
         //监听播放或暂停事件
         RxBus.getDefault().toObservable(PauseVideoEvent.class)
-                .subscribe((Action1<PauseVideoEvent>) event ->{
+                .subscribe((Action1<PauseVideoEvent>) event -> {
                     if (event.isPlayOrPause()) {
+                        ImageView iv_play = rootView.findViewById(R.id.iv_play);
                         videoView.start();
-                        ivPlay.setVisibility(View.GONE);
-                    }else {
+                        if (iv_play.getVisibility() == View.VISIBLE)
+                            iv_play.setVisibility(View.GONE);
+                    } else {
                         videoView.pause();
                     }
                 });
@@ -73,8 +78,9 @@ public class RecommendFragment extends BaseFragment{
     public void onResume() {
         super.onResume();
         //返回时，推荐页面可见，则继续播放视频
-        if (MainActivity.curMainPage == 0 && MainFragment.curPage == 1)
+        if (MainActivity.curMainPage == 0 && MainFragment.curPage == 1) {
             videoView.start();
+        }
     }
 
     @Override
@@ -93,7 +99,6 @@ public class RecommendFragment extends BaseFragment{
         viewPagerLayoutManager = new ViewPagerLayoutManager(getContext());
         recyclerView.setLayoutManager(viewPagerLayoutManager);
         recyclerView.scrollToPosition(initPos);
-        ImageView ivPlay = rootView.findViewById(R.id.iv_play);
         viewPagerLayoutManager.setOnViewPagerListener(new OnViewPagerListener() {
             @Override
             public void onInitComplete() {
@@ -102,12 +107,14 @@ public class RecommendFragment extends BaseFragment{
 
             @Override
             public void onPageRelease(boolean isNext, int position) {
-
+                if (ivCurCover != null) {
+                    ivCurCover.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
             public void onPageSelected(int position, boolean isBottom) {
-
+                playCurVideo(position);
             }
         });
     }
@@ -132,21 +139,21 @@ public class RecommendFragment extends BaseFragment{
             return;
         }
         View itemView = viewPagerLayoutManager.findViewByPosition(position);
-        if (itemView==null)
+        if (itemView == null)
             return;
         ViewGroup rootView = itemView.findViewById(R.id.rl_container);
-        LikeView likeView = rootView.findViewById(R.id.controller);
+        LikeView likeView = rootView.findViewById(R.id.likeview);
         ImageView ivPlay = rootView.findViewById(R.id.iv_play);
         ImageView ivCover = rootView.findViewById(R.id.iv_cover);
         ControllerView controllerView = rootView.findViewById(R.id.controller);
         //设置透明度
         ivPlay.setAlpha(0.4f);
         //设置单击暂停/播放事件
-        likeView.setOnPlayPauseListener(()->{
+        likeView.setOnPlayPauseListener(() -> {
             if (videoView.isPlaying()) {
                 videoView.pause();
                 ivPlay.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 videoView.start();
                 ivPlay.setVisibility(View.GONE);
             }
@@ -154,6 +161,10 @@ public class RecommendFragment extends BaseFragment{
         //切换播放视频的作者主页数据
         RxBus.getDefault().post(new CurUserBean(DataCreate.datas.get(position).getUserBean()));
         curPlayPos = position;
+        //切换播放器位置
+        dettachParentView(rootView);
+        likeShareEvent(controllerView);
+        autoPlayVideo(curPlayPos, ivCover);
     }
 
 
@@ -167,15 +178,21 @@ public class RecommendFragment extends BaseFragment{
 
     //自动播放视频
     private void autoPlayVideo(int position, ImageView ivCover) {
-        String bgVideoPath = "android.resource://" + getActivity().getPackageName() + "/" + DataCreate.datas.get(position).getVideoRes();
-        videoView.setVideoPath(bgVideoPath);
+        String bgVideoPath;
+        if (DataCreate.datas.get(position).getVideoRes() != 0) {
+            bgVideoPath = "android.resource://" + getActivity().getPackageName() + "/" + DataCreate.datas.get(position).getVideoRes();
+            videoView.setVideoPath(bgVideoPath);
+        } else {
+            Log.d("TAG", "autoPlayVideo:" + DataCreate.datas.get(position).getUri());
+            videoView.setVideoURI(DataCreate.datas.get(position).getUri());
+        }
+
         ImageView ivPlay = rootView.findViewById(R.id.iv_play);
-        if(ivPlay.getVisibility()==View.VISIBLE)
+        if (ivPlay.getVisibility() == View.VISIBLE)
             ivPlay.setVisibility(View.GONE);
         videoView.start();
         videoView.setOnPreparedListener(mp -> {
             mp.setLooping(true);
-
             //延迟取消封面，避免加载视频黑屏
             new CountDownTimer(200, 200) {
                 @Override

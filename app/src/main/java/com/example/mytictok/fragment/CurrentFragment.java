@@ -50,6 +50,7 @@ public class CurrentFragment extends BaseFragment {
 
                 @Override
                 public void onFinish() {
+                    adpter.notifyDataSetChanged();
                     refreshLayout.setRefreshing(false);
                 }
             }.start();

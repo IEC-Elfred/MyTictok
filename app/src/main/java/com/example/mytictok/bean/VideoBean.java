@@ -1,5 +1,9 @@
 package com.example.mytictok.bean;
 
+import android.net.Uri;
+
+import java.net.URI;
+
 public class VideoBean {
     private int videoId;
     /** 视频播放资源 */
@@ -15,6 +19,9 @@ public class VideoBean {
 
     /** 点赞数 */
     private int likeCount;
+
+    /*URI*/
+    private Uri uri;
 
     public int getVideoId() {
         return videoId;
@@ -74,6 +81,13 @@ public class VideoBean {
         this.likeCount = likeCount;
     }
 
+    public Uri getUri() {
+        return uri;
+    }
+
+    public void setUri(Uri uri) {
+        this.uri = uri;
+    }
 
 
     public static class UserBean {

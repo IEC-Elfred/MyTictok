@@ -64,7 +64,6 @@ public class ControllerView extends RelativeLayout implements View.OnClickListen
     private void init() {
         View rootView = LayoutInflater.from(getContext()).inflate(R.layout.view_controller, this);
         ButterKnife.bind(this, rootView);
-
         //这里的this是controllerView,controllerView实现了View.OnClickListener
         ivHead.setOnClickListener(this);
         rlLike.setOnClickListener(this);
@@ -82,7 +81,7 @@ public class ControllerView extends RelativeLayout implements View.OnClickListen
         tvNickname.setText("@" + videoData.getUserBean().getNickName());
         tvLikecount.setText(NumUtils.numberFilter(videoData.getLikeCount()));
         animationView.setAnimation("heart.json");
-
+        textView.setText(videoData.getContent());
         //点赞状态
         if (videoData.isLiked()) {
             ivLike.setTextColor(getResources().getColor(R.color.color_FF0041));

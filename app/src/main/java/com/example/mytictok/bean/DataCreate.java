@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class DataCreate {
     public static ArrayList<VideoBean> datas = new ArrayList<>();
     public static ArrayList<VideoBean.UserBean> userList = new ArrayList<>();
-
+    public static int num ;
     public void initData() {
 
         VideoBean videoBeanOne = new VideoBean();
@@ -15,8 +15,6 @@ public class DataCreate {
         videoBeanOne.setContent("#街坊 #颜值打分 给自己颜值打100分的女生集合");
         videoBeanOne.setVideoRes(R.raw.video1);
         videoBeanOne.setLikeCount(226823);
-
-
         VideoBean.UserBean userBeanOne = new VideoBean.UserBean();
         userBeanOne.setUid(1);
         userBeanOne.setHead(R.mipmap.head1);
@@ -197,15 +195,6 @@ public class DataCreate {
         datas.add(videoBeanSeven);
         datas.add(videoBeanEight);
 
-
-        datas.add(videoBeanOne);
-        datas.add(videoBeanTwo);
-        datas.add(videoBeanThree);
-        datas.add(videoBeanFour);
-        datas.add(videoBeanFive);
-        datas.add(videoBeanSix);
-        datas.add(videoBeanSeven);
-        datas.add(videoBeanEight);
 
     }
 }

@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/tools"
-    tools:ignore="NamespaceTypo">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.viewpager.widget.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -59,10 +58,10 @@
             android:layout_height="50dp"
             android:background="@color/black" />
         <ImageView
+            android:id="@+id/up_load"
             android:layout_width="50dp"
             android:layout_height="35dp"
             android:background="@mipmap/ic_main_menu"
-            android:layout_centerInParent="true"
-            />
+            android:layout_centerInParent="true" />
     </RelativeLayout>
 </RelativeLayout>

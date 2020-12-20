@@ -3,6 +3,7 @@ package com.example.mytictok.view;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.example.mytictok.R;
 import com.example.mytictok.utils.AnimUtils;
 
 import java.lang.reflect.GenericArrayType;
+import java.time.LocalDate;
 import java.util.Random;
 
 public class LikeView extends RelativeLayout {
@@ -52,15 +54,23 @@ public class LikeView extends RelativeLayout {
             public boolean onDoubleTapEvent(MotionEvent e) {
                 addLikeView(e);
                 onLikeListener.onLikeListener();
+                Log.d("TAG", "onDoubleTapEvent:222 ");
                 return true;
             }
 
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
-                return super.onSingleTapConfirmed(e);
+                if (onPlayPauseListener != null) {
+                    onPlayPauseListener.onPlayOrPause();
+                }
+                Log.d("TAG", "onSingleTapConfirmed:111 ");
+                return true;
             }
         });
-
+        setOnTouchListener((v, event) -> {
+            gestureDetector.onTouchEvent(event);
+            return true;
+        });
     }
 
     private void addLikeView(MotionEvent e) {

@@ -26,6 +26,10 @@ public class MainActivity extends BaseActivity {
     public static int curMainPage;
     private MainFragment mainFragment = new MainFragment();
 
+    /** 上次点击返回键时间 */
+    private long lastTime;
+    /** 连续按返回键退出时间 */
+    private final int EXIT_TIME = 2000;
 
     @Override
     protected int setLayoutId() {
@@ -36,8 +40,10 @@ public class MainActivity extends BaseActivity {
     protected void init() {
 
         fragments.add(mainFragment);
-        pagerAdapter = new CommPagerAdapter(getSupportFragmentManager(), fragments, new String[]{"", ""});
+        pagerAdapter = new CommPagerAdapter(getSupportFragmentManager(), fragments, new String[]{"",""});
         viewPager.setAdapter(pagerAdapter);
+
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -50,7 +56,7 @@ public class MainActivity extends BaseActivity {
 
                 if (position == 0) {
                     RxBus.getDefault().post(new PauseVideoEvent(true));
-                } else if (position == 1) {
+                } else if (position == 1){
                     RxBus.getDefault().post(new PauseVideoEvent(false));
                 }
             }
@@ -62,5 +68,18 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-
+    @Override
+    public void onBackPressed() {
+        //双击返回退出App
+        if (System.currentTimeMillis() - lastTime > EXIT_TIME) {
+            if (viewPager.getCurrentItem() == 1) {
+                viewPager.setCurrentItem(0);
+            }else{
+                Toast.makeText(getApplicationContext(), "再按一次退出", Toast.LENGTH_SHORT).show();
+                lastTime = System.currentTimeMillis();
+            }
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

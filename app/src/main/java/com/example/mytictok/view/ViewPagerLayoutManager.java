@@ -76,27 +76,30 @@ public class ViewPagerLayoutManager extends LinearLayoutManager {
     public void setOnViewPagerListener(OnViewPagerListener listener) {
         this.mOnViewPagerListener = listener;
     }
+
     //通过scrollHorizontallyBy（）和scrollVerticallyBy（）可以拿到滑动偏移量，可以判断滑动方向
     //通过滑动方向判断释放上一页还是下一页
     private RecyclerView.OnChildAttachStateChangeListener onChildAttachStateChangeListener = new RecyclerView.OnChildAttachStateChangeListener() {
         @Override
         //第一次进入界面的监听，可以用来实现首次播放的逻辑
-        public void onChildViewAttachedToWindow(@NonNull View view) {
+        public void onChildViewAttachedToWindow( View view) {
             if (mOnViewPagerListener != null && getChildCount() == 1) {
                 mOnViewPagerListener.onInitComplete();
             }
         }
+
         //要回收item的时候，可以释放资源的监听
         @Override
         public void onChildViewDetachedFromWindow(@NonNull View view) {
             if (mDrift >= 0) {
                 if (mOnViewPagerListener != null)
-                    mOnViewPagerListener.onPageRelease(true,getPosition(view));
-                else
-                if (mOnViewPagerListener != null)
-                    mOnViewPagerListener.onPageRelease(false, getPosition(view));
-                mOnViewPagerListener.onPageRelease(true,getPosition(view));
-            }
+                    mOnViewPagerListener.onPageRelease(true, getPosition(view));
+            } else {
+                    if (mOnViewPagerListener != null)
+                        mOnViewPagerListener.onPageRelease(false, getPosition(view));
+                }
+                mOnViewPagerListener.onPageRelease(true, getPosition(view));
+
         }
     };
 

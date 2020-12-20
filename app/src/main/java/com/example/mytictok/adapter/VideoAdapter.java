@@ -32,6 +32,7 @@ public class VideoAdapter extends BaseRvAdapter<VideoBean,VideoAdapter.VideoView
         holder.ivCover.setImageResource(data.getCoverRes());
         holder.likeView.setOnLikeListener(()->{
             if (!data.isLiked()){
+                //未点赞，会有点赞效果，否则无
                 holder.controllerView.like();
             }
         });
@@ -51,11 +52,14 @@ public class VideoAdapter extends BaseRvAdapter<VideoBean,VideoAdapter.VideoView
         ControllerView controllerView;
         @BindView(R.id.iv_cover)
         ImageView ivCover;
+        @BindView(R.id.iv_play)
+        ImageView ivPlay;
 
         public VideoViewHolder(View itemView) {
             super(itemView);
-
             ButterKnife.bind(this, itemView);
+            if (ivPlay.getVisibility() == View.VISIBLE)
+                ivPlay.setVisibility(View.GONE);
         }
     }
 }
