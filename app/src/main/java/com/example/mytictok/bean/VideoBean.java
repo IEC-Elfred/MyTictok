@@ -16,11 +16,17 @@ public class VideoBean {
     private UserBean userBean;
     /** 是否已点赞 */
     private boolean isLiked;
-
+    /** 与视频发布距离 */
+    private float distance;
+    /** 是否已关注 */
+    private boolean isFocused;
     /** 点赞数 */
     private int likeCount;
-
-    /*URI*/
+    /** 评论数 */
+    private int commentCount;
+    /** 转发数 */
+    private int shareCount;
+    /**URI**/
     private Uri uri;
 
     public int getVideoId() {
@@ -71,7 +77,21 @@ public class VideoBean {
         isLiked = liked;
     }
 
+    public float getDistance() {
+        return distance;
+    }
 
+    public void setDistance(float distance) {
+        this.distance = distance;
+    }
+
+    public boolean isFocused() {
+        return isFocused;
+    }
+
+    public void setFocused(boolean focused) {
+        isFocused = focused;
+    }
 
     public int getLikeCount() {
         return likeCount;
@@ -81,6 +101,22 @@ public class VideoBean {
         this.likeCount = likeCount;
     }
 
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public int getShareCount() {
+        return shareCount;
+    }
+
+    public void setShareCount(int shareCount) {
+        this.shareCount = shareCount;
+    }
+
     public Uri getUri() {
         return uri;
     }
@@ -88,7 +124,6 @@ public class VideoBean {
     public void setUri(Uri uri) {
         this.uri = uri;
     }
-
 
     public static class UserBean {
         private int uid;

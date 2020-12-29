@@ -19,13 +19,16 @@ import com.example.mytictok.adapter.VideoAdapter;
 import com.example.mytictok.base.BaseFragment;
 import com.example.mytictok.bean.CurUserBean;
 import com.example.mytictok.bean.DataCreate;
+import com.example.mytictok.bean.MainPageChangeEvent;
 import com.example.mytictok.bean.PauseVideoEvent;
 import com.example.mytictok.utils.OnVideoControllerListener;
 import com.example.mytictok.utils.RxBus;
+import com.example.mytictok.view.CommentDialog;
 import com.example.mytictok.view.ControllerView;
 import com.example.mytictok.view.FullScreenVideoView;
 import com.example.mytictok.view.LikeView;
 import com.example.mytictok.view.OnViewPagerListener;
+import com.example.mytictok.view.ShareDialog;
 import com.example.mytictok.view.ViewPagerLayoutManager;
 
 import butterknife.BindView;
@@ -216,7 +219,7 @@ public class RecommendFragment extends BaseFragment {
         controllerView.setListener(new OnVideoControllerListener() {
             @Override
             public void onHeadClick() {
-
+                RxBus.getDefault().post(new MainPageChangeEvent(1));
             }
 
             @Override
@@ -224,6 +227,16 @@ public class RecommendFragment extends BaseFragment {
 
             }
 
+            @Override
+            public void onCommentClick() {
+                CommentDialog commentDialog = new CommentDialog();
+                commentDialog.show(getChildFragmentManager(), "");
+            }
+
+            @Override
+            public void onShareClick() {
+                new ShareDialog().show(getChildFragmentManager(), "");
+            }
         });
     }
 

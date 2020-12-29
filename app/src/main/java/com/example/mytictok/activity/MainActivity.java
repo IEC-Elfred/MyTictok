@@ -10,13 +10,16 @@ import android.widget.Toast;
 import com.example.mytictok.R;
 import com.example.mytictok.adapter.CommPagerAdapter;
 import com.example.mytictok.base.BaseActivity;
+import com.example.mytictok.bean.MainPageChangeEvent;
 import com.example.mytictok.bean.PauseVideoEvent;
 import com.example.mytictok.fragment.MainFragment;
+import com.example.mytictok.fragment.PersonalHomeFragment;
 import com.example.mytictok.utils.RxBus;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import rx.functions.Action1;
 
 public class MainActivity extends BaseActivity {
     @BindView(R.id.viewpager)
@@ -24,8 +27,9 @@ public class MainActivity extends BaseActivity {
     private CommPagerAdapter pagerAdapter;
     private ArrayList<Fragment> fragments = new ArrayList<>();
     public static int curMainPage;
+    private PersonalHomeFragment personalHomeFragment = new PersonalHomeFragment();
     private MainFragment mainFragment = new MainFragment();
-
+    public static int initPos=0;
     /** 上次点击返回键时间 */
     private long lastTime;
     /** 连续按返回键退出时间 */
@@ -38,11 +42,18 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void init() {
-
         fragments.add(mainFragment);
+        fragments.add(personalHomeFragment);
         pagerAdapter = new CommPagerAdapter(getSupportFragmentManager(), fragments, new String[]{"",""});
         viewPager.setAdapter(pagerAdapter);
 
+        //点击头像切换页面
+        RxBus.getDefault().toObservable(MainPageChangeEvent.class)
+                .subscribe((Action1<MainPageChangeEvent>) event -> {
+                    if (viewPager != null) {
+                        viewPager.setCurrentItem(event.getPage());
+                    }
+                });
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
