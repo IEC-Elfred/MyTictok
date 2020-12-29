@@ -47,8 +47,6 @@ public class RecommendFragment extends BaseFragment {
     private int curPlayPos = -1;
     private FullScreenVideoView videoView;
     private ImageView ivCurCover;
-    public static int initPos = 0;
-
 
     @Override
     protected int setLayoutId() {
@@ -101,11 +99,11 @@ public class RecommendFragment extends BaseFragment {
     private void setViewPagerLayoutManager() {
         viewPagerLayoutManager = new ViewPagerLayoutManager(getContext());
         recyclerView.setLayoutManager(viewPagerLayoutManager);
-        recyclerView.scrollToPosition(initPos);
+        recyclerView.scrollToPosition(MainActivity.initPos);
         viewPagerLayoutManager.setOnViewPagerListener(new OnViewPagerListener() {
             @Override
             public void onInitComplete() {
-                playCurVideo(initPos);
+                playCurVideo(MainActivity.initPos);
             }
 
             @Override
